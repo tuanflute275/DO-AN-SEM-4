@@ -26,15 +26,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+// app.UseHttpsRedirection(); // Tắt redirect HTTP->HTTPS để Flutter Web gọi API qua HTTP
 app.UseRouting();
 
-app.UseCors(
-        options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()
-    );
+// UseCors PHẢI đứng trước UseStaticFiles để ảnh /uploads/ cũng có CORS headers
+app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
-app.UseCors("AllowOrigin");
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using System.Drawing.Printing;
 
 namespace API_Application.Controllers
@@ -117,18 +117,13 @@ namespace API_Application.Controllers
                 act.Avatar = actorFound.Avatar;
             }
 
-            var actor = new Actor
-            {
-                Id = act.Id,
-                Name = act.Name,
-                Birthday = act.Birthday,
-                Description = act.Description,
-                Avatar = act.Avatar,
-                CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
-            };
-
-            _context.Entry(actor).State = EntityState.Modified;
+            // Cập nhật trực tiếp lên entity đang được EF Core track
+            // tránh lỗi "instance with same key already being tracked"
+            actorFound.Name = act.Name;
+            actorFound.Birthday = act.Birthday;
+            actorFound.Description = act.Description;
+            actorFound.Avatar = act.Avatar;
+            actorFound.UpdatedAt = DateOnly.FromDateTime(DateTime.Now);
 
             try
             {
@@ -146,7 +141,7 @@ namespace API_Application.Controllers
                 }
             }
 
-            return Ok(actor);
+            return Ok(actorFound);
         }
 
         // POST: api/Actor
